@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Calc {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ScanerException {
         Scanner inputData = new Scanner(System.in);
         CheckData inData = new CheckData();
         //CheckValue sign = new CheckValue();
@@ -19,33 +19,39 @@ public class Calc {
         String a, b, rezRim;
         int rezNum;
 
+        // проверка от 0 до 10
         if (value1 == "rim" && value2 == "rim"){
             a = String.valueOf(rimToNumConvert(inData.checkData()[0]));
             b = String.valueOf(rimToNumConvert(inData.checkData()[1]));
             if (Integer.parseInt(a) > 10 || Integer.parseInt(a) < 1 || Integer.parseInt(b) >10 || Integer.parseInt(b) < 1){
-                System.out.println("Введены не корректные данные");
-                System.exit(1);
+//                System.out.println("Введены не корректные данные");
+//                System.exit(1);
+                throw new ScanerException("Введены значения меньше 1 или больше 10");
             }
+            //проверка на отрицательный результат
             rezNum = rezultOperation(a, b, sign);
             if (rezNum > 0 ){
                 rezRim = numToRimConvert(rezNum);
                 System.out.println("Ответ: " + rezRim);
             }else {
-                System.out.println("Введены не корректные данные");
-                System.exit(1);
+//                System.out.println("Введены не корректные данные");
+//                System.exit(1);
+                throw new ScanerException("в римской системе нет отрицательных чисел");
             }
         } else if (value1 == "num" && value2 == "num") {
             a = inData.checkData()[0];
             b = inData.checkData()[1];
             if (Integer.parseInt(a) > 10 || Integer.parseInt(a) < 1 || Integer.parseInt(b) >10 || Integer.parseInt(b) < 1){
-                System.out.println("Введены не корректные данные");
-                System.exit(1);
+//                System.out.println("Введены не корректные данные");
+//                System.exit(1);
+                throw new ScanerException("Введены значения меньше 1 или больше 10");
             }
             rezNum = rezultOperation(a, b, sign);
             System.out.println("Ответ: " + rezNum);
         }else {
-            System.out.println("Введены не корректные данные");
-            System.exit(1);
+//            System.out.println("Введены не корректные данные");
+//            System.exit(1);
+            throw new ScanerException("используются одновременно разные системы счисления");
         }
 
 
@@ -166,14 +172,20 @@ public class Calc {
         return rezult;
     }
 }
+//обработка исключений
+class ScanerException extends Exception{
+    public ScanerException(String message){
+        super(message);
+    }
+}
 
 class CheckData{   //класс для разделения на данные
     String data;    //вводимые данне
     String[] operation = new String[]{"+", "-", "*", "/"};
     String choiseOperation;
     String[] value; // результат 2 отдельных числа и знак математического действия пример [1,2,+]
-    int indexOperation, firstIndexOperation, lastIndexOperation = -1;
-    String[] checkData(){           //проверка на лишнее математическое действие, разделение на значения, нахождение математического действия
+    int indexOperation = -1, firstIndexOperation = -1, lastIndexOperation = -1;
+    String[] checkData() throws ScanerException {           //проверка на лишнее математическое действие, разделение на значения, нахождение математического действия
         for (int i=0; i<4; i++){                        //нахождение нужного математического оператора и его индекс
             if (data.indexOf(operation[i]) != -1){
                 firstIndexOperation = data.indexOf(operation[i]);
@@ -189,10 +201,13 @@ class CheckData{   //класс для разделения на данные
             }
         }
 
-        if (lastIndexOperation != firstIndexOperation || indexOperation == -1){   //проверка коректности ввода нанных
-            System.out.println("Введены не корректные данные");
-            System.exit(1);
-        }else {
+        if (indexOperation == -1){   //проверка коректности ввода нанных
+//            System.out.println("Введены не корректные данные");
+//            System.exit(1);
+            throw new ScanerException("строка не является математической операцией");
+        } else if(lastIndexOperation != firstIndexOperation){
+            throw new ScanerException("формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
+        } else {
             value = data.split("\\" + operation[indexOperation]);   //разделение на 2 значения  operation[indexOperation]
             for(int i=0; i<value.length; i++){
                 value[i] = value[i].trim();
