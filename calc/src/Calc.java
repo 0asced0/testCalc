@@ -24,8 +24,6 @@ public class Calc {
             a = String.valueOf(rimToNumConvert(inData.checkData()[0]));
             b = String.valueOf(rimToNumConvert(inData.checkData()[1]));
             if (Integer.parseInt(a) > 10 || Integer.parseInt(a) < 1 || Integer.parseInt(b) >10 || Integer.parseInt(b) < 1){
-//                System.out.println("Введены не корректные данные");
-//                System.exit(1);
                 throw new ScanerException("Введены значения меньше 1 или больше 10");
             }
             //проверка на отрицательный результат
@@ -34,23 +32,17 @@ public class Calc {
                 rezRim = numToRimConvert(rezNum);
                 System.out.println("Ответ: " + rezRim);
             }else {
-//                System.out.println("Введены не корректные данные");
-//                System.exit(1);
                 throw new ScanerException("в римской системе нет отрицательных чисел");
             }
         } else if (value1 == "num" && value2 == "num") {
             a = inData.checkData()[0];
             b = inData.checkData()[1];
             if (Integer.parseInt(a) > 10 || Integer.parseInt(a) < 1 || Integer.parseInt(b) >10 || Integer.parseInt(b) < 1){
-//                System.out.println("Введены не корректные данные");
-//                System.exit(1);
                 throw new ScanerException("Введены значения меньше 1 или больше 10");
             }
             rezNum = rezultOperation(a, b, sign);
             System.out.println("Ответ: " + rezNum);
         }else {
-//            System.out.println("Введены не корректные данные");
-//            System.exit(1);
             throw new ScanerException("используются одновременно разные системы счисления");
         }
 
@@ -202,8 +194,6 @@ class CheckData{   //класс для разделения на данные
         }
 
         if (indexOperation == -1){   //проверка коректности ввода нанных
-//            System.out.println("Введены не корректные данные");
-//            System.exit(1);
             throw new ScanerException("строка не является математической операцией");
         } else if(lastIndexOperation != firstIndexOperation){
             throw new ScanerException("формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
